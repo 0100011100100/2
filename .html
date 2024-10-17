@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Control Panel</title>
+</head>
+<body>
+  <h1>Admin Control Panel</h1>
+
+  <!-- Input to delete a message -->
+  <div>
+    <h3>Delete a Message</h3>
+    <input type="text" id="messageId" placeholder="Enter Message ID">
+    <button onclick="deleteMessage()">Delete Message</button>
+  </div>
+
+  <!-- Input to ban a user -->
+  <div>
+    <h3>Ban a User</h3>
+    <input type="text" id="userId" placeholder="Enter User ID">
+    <button onclick="banUser()">Ban User</button>
+  </div>
+
+  <!-- Input to mute a user -->
+  <div>
+    <h3>Mute a User</h3>
+    <input type="text" id="muteUserId" placeholder="Enter User ID">
+    <button onclick="muteUser()">Mute User</button>
+  </div>
+
+  <!-- Firebase script should already be initialized -->
+
+  <script>
+    // Reference to Firebase Realtime Database
+    const database = firebase.database();
+
+    // Function to delete a message
+    function deleteMessage() {
+      const messageId = document.getElementById('messageId').value;
+      if (messageId) {
+        database.ref('messages/' + messageId).remove()
+          .then(() => {
+            alert('Message deleted successfully');
+          })
+          .catch((error) => {
+            alert('Failed to delete message: ' + error.message);
+          });
+      } else {
+        alert('Please enter a message ID');
+      }
+    }
+
+    // Function to ban a user
+    function banUser() {
+      const userId = document.getElementById('userId').value;
+      if (userId) {
+        database.ref('bannedUsers/' + userId).set({
+          banned: true
+        })
+        .then(() => {
+          alert('User banned successfully');
+        })
+        .catch((error) => {
+          alert('Failed to ban user: ' + error.message);
+        });
+      } else {
+        alert('Please enter a user ID');
+      }
+    }
+
+    // Function to mute a user
+    function muteUser() {
+      const muteUserId = document.getElementById('muteUserId').value;
+      if (muteUserId) {
+        database.ref('mutedUsers/' + muteUserId).set({
+          muted: true
+        })
+        .then(() => {
+          alert('User muted successfully');
+        })
+        .catch((error) => {
+          alert('Failed to mute user: ' + error.message);
+        });
+      } else {
+        alert('Please enter a user ID');
+      }
+    }
+  </script>
+</body>
+</html>
